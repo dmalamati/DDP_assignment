@@ -53,7 +53,7 @@ object GroupAllPairs {
     println("\nNumber of all pairs: " + mappedGroupPairs.count())
     mappedGroupPairs.take(5).foreach(println)
 
-    // Reduce phase: receives ({g(i), g(j)}, list of records from g(i) and g(j)) key-value pairs where g(i)≠g(j)
+    // Reduce phase: generate ({g(i), g(j)}, list of records from g(i) and g(j)) key-value pairs where g(i)≠g(j)
     val reducedGroupPairs = mappedGroupPairs.groupByKey()
 
     println("\nNumber of all pairs: " + reducedGroupPairs.count())
