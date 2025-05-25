@@ -37,7 +37,7 @@ object NaiveAllPairs {
     println("\nNumber of all pairs: " + mappedPairs.count())
     mappedPairs.take(5).foreach(println)
 
-    // Reduce phase: receives ({i, j}, [Ri, Rj]) key-value pairs where i≠j
+    // Reduce phase: generate ({i, j}, [Ri, Rj]) key-value pairs where i≠j
     val reducedPairs = mappedPairs.groupByKey()
 
     println("\nNumber of all pairs: " + reducedPairs.count())
