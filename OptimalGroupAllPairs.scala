@@ -26,13 +26,17 @@ object OptimalGroupAllPairs {
 
     ////////////////////// Find Optimal p Function ///////////////////////
 
+    // Function that checks if the given number is a prime number
     def isPrime(n: Int): Boolean = {
       if (n < 2) false
       else !(2 to math.sqrt(n).toInt).exists(n % _ == 0)
     }
 
+    // Function that finds the largest prime number p that satisfies the condition: numOfRecords mod p^2 = 0
     def findOptimalPrime(d: Int): Option[Int] = {
+      // The upper limit for p is the root of numOfRecords (and the lowest is 2)
       val max_p = math.sqrt(d).toInt
+      // Check if any number from the range [2, max_p] satisfies the condition in reverse order (to find the largest)
       (2 to max_p).reverse.find{ p =>
         isPrime(p) && d % (p * p) == 0
       }
