@@ -1,8 +1,6 @@
 import org.apache.spark.sql.SparkSession
 import scala.util.Random
 
-
-
 object GroupAllPairs {
   def main(args: Array[String]): Unit = {
     val spark = SparkSession.builder
@@ -14,7 +12,7 @@ object GroupAllPairs {
 
     val numOfRecords = 3000 // The wanted amount of data records
     val numOfGroups = 30 // The wanted amount of groups
-    val recordLength = 100
+    val recordLength = 100 // The wanted record size in bytes
 
     //////////////////////////// Create Data /////////////////////////////
 
@@ -57,22 +55,32 @@ object GroupAllPairs {
     val endTime = System.nanoTime()
     val executionTimeMs = (endTime - startTime) / 1e6  // Convert to milliseconds
 
-    // Print head of mappedGroupPairs and reducedGroupPairs for execution and reference
-    println("\nNumber of all pairs: " + mappedGroupPairs.count())
-    mappedGroupPairs.take(5).foreach(println)
+    // Force mappedGroupPairs and reducedGroupPairs RDD execution
+    println("\nNumber of pairs after map phase: " + mappedGroupPairs.count())
+    println("\nNumber of pairs after reduce phase: " + reducedGroupPairs.count())
 
-    println("\nNumber of all pairs: " + reducedGroupPairs.count())
-    reducedGroupPairs.take(5).foreach(println)
+    ////////////////////////////// Outputs ///////////////////////////////
 
     val replicationRate = numOfGroups - 1
     val numPairs = mappedGroupPairs.count()
-    val sizePerPair = 8 + recordLength  //...
+    val sizePerPair = 12 + recordLength  // roughly 12 bytes for (gi, gj, i) + record size in bytes
     val totalBytes = numPairs * sizePerPair
     val totalMB = totalBytes / (1024.0 * 1024.0)
 
     println("\nReplication Rate: " + replicationRate)
     println("Communication Cost in pairs: " + numPairs)
-    println("Estimated communication cost: " + totalMB + " MB")
+    println("Estimated communication cost in MB: " + totalMB)
     println("Execution Time (ms): " + executionTimeMs)
+
+    // Reference for the shape of the pairs after map phase
+    println("\nSample of pairs after map phase: " )
+    mappedGroupPairs.take(5).foreach(println)
+
+    // Reference for the shape of the pairs after reduce phase
+    println("\nSample of pairs after reduce phase: ")
+    reducedGroupPairs.take(5).foreach(println)
+
+    spark.stop()
+
   }
 }
