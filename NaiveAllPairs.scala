@@ -45,24 +45,30 @@ object NaiveAllPairs {
     val endTime = System.nanoTime()
     val executionTimeMs = (endTime - startTime) / 1e6  // Convert to milliseconds
 
-    // Print head of mappedGroupPairs and reducedGroupPairs for execution and reference
-    println("\nNumber of all pairs: " + mappedPairs.count())
-    mappedPairs.take(5).foreach(println)
+    // Force mappedPairs and reducedPairs RDD execution
+    println("\nNumber of pairs after map phase: " + mappedPairs.count())
+    println("\nNumber of pairs after reduce phase: " + reducedPairs.count())
 
-    println("\nNumber of all pairs: " + reducedPairs.count())
-    reducedPairs.take(5).foreach(println)
-
+    ////////////////////////////// Outputs ///////////////////////////////
 
     val replicationRate = numOfGroups - 1 // numOfGroups = numOfRecords
     val numPairs = mappedPairs.count()
-    val sizePerPair = 8 + recordLength  // 8 bytes for (i, j) + record size in bytes
+    val sizePerPair = 8 + recordLength  // roughly 8 bytes for (i, j) + record size in bytes
     val totalBytes = numPairs * sizePerPair
     val totalMB = totalBytes / (1024.0 * 1024.0)
 
     println("\nReplication Rate: " + replicationRate)
     println("Communication Cost in pairs: " + numPairs)
-    println("Estimated communication cost: " + totalMB + " MB")
+    println("Estimated communication cost in MB: " + totalMB)
     println("Execution Time (ms): " + executionTimeMs)
+
+    // Reference for the shape of the pairs after map phase
+    println("\nSample of pairs after map phase: " )
+    mappedPairs.take(5).foreach(println)
+
+    // Reference for the shape of the pairs after reduce phase
+    println("\nSample of pairs after reduce phase: ")
+    reducedPairs.take(5).foreach(println)
 
     spark.stop()
 
