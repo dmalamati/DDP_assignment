@@ -14,12 +14,13 @@ object GroupAllPairs {
 
     val numOfRecords = 3000 // The wanted amount of data records
     val numOfGroups = 30 // The wanted amount of groups
+    val recordLength = 100
 
     //////////////////////////// Create Data /////////////////////////////
 
     // Create synthetic data record: (i, record_i)
     val syntheticData = (1 to numOfRecords).map { i =>
-      val record = Random.alphanumeric.take(100).mkString // create a random string of 100 characters as an item record (~200bytes) -> .take(1024 * 1024) for 1MB per record
+      val record = Random.alphanumeric.take(recordLength).mkString // create a random string of 100 characters as an item record (~200bytes) -> .take(1024 * 1024) for 1MB per record
       (i, record)
     }
 
@@ -64,9 +65,14 @@ object GroupAllPairs {
     reducedGroupPairs.take(5).foreach(println)
 
     val replicationRate = numOfGroups - 1
-    val communicationCost = mappedGroupPairs.count()
+    val numPairs = mappedGroupPairs.count()
+    val sizePerPair = 8 + recordLength  //...
+    val totalBytes = numPairs * sizePerPair
+    val totalMB = totalBytes / (1024.0 * 1024.0)
+
     println("\nReplication Rate: " + replicationRate)
-    println("\nCommunication Cost: " + communicationCost)
-    println("\nExecution Time (ms): " + executionTimeMs)
+    println("Communication Cost in pairs: " + numPairs)
+    println("Estimated communication cost: " + totalMB + " MB")
+    println("Execution Time (ms): " + executionTimeMs)
   }
 }
