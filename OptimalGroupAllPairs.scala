@@ -83,7 +83,7 @@ object OptimalGroupAllPairs {
 
     val replicationRate = r
     val numPairs = mappedOptimalGroupPairs.count()
-    val sizePerPair = 4 + recordLength  // roughly 4 bytes for the reducer id + record size in bytes
+    val sizePerPair = 12 + recordLength  // roughly 12 bytes for (row, col, i) + record size in bytes
     val totalBytes = numPairs * sizePerPair
     val totalMB = totalBytes / (1024.0 * 1024.0)
 
