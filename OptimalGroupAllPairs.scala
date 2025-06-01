@@ -22,8 +22,7 @@ object OptimalGroupAllPairs {
 
     // Create synthetic data record: (i, record_i)
     val syntheticData = (1 to numOfRecords).map { i =>
-      // Create a random string of length=recordLength, which roughly translates to recordLength*1 bytes when using UTF-8 format
-      val record = Random.alphanumeric.take(recordLength).mkString
+      val record = Random.alphanumeric.take(recordLength).mkString // create a random string of 100 characters as an item record (~200bytes) -> .take(1024 * 1024) for 1MB per record
       (i, record)
     }
 
@@ -78,12 +77,9 @@ object OptimalGroupAllPairs {
       reducers.map { reducer => (reducer, (i, record_i)) }
     }
 
-    // Reduce phase: receives ((row, col), List[records in (row, col) coordinates]) key-value pairs where (row, col) the array 'coordinates' that correspond to a reducer
+    // Reduce phase: receives ((row, col), List[records from g(i)]) key-value pairs where (row, col) the array 'coordinates' that correspond to a reducer
     val reducedOptimalGroupPairs = mappedOptimalGroupPairs.mapValues(v => List(v)).reduceByKey(_ ++ _)
 
-
-    val endTime = System.nanoTime()
-    val executionTimeMs = (endTime - startTime) / 1e6 // Convert to milliseconds
 
     // Force mappedOptimalGroupPairs and reducedOptimalGroupPairs RDD execution
     println("\nNumber of pairs after map phase: " + mappedOptimalGroupPairs.count())
@@ -96,6 +92,9 @@ object OptimalGroupAllPairs {
     val sizePerPair = 12 + recordLength  // roughly 12 bytes for (row, col, i) + record size in bytes
     val totalBytes = numPairs * sizePerPair
     val totalMB = totalBytes / (1024.0 * 1024.0)
+    val endTime = System.nanoTime()
+    val executionTimeMs = (endTime - startTime) / 1e6 // Convert to milliseconds
+
 
     println("\nReplication Rate: " + replicationRate)
     println("Communication Cost in pairs: " + numPairs)
