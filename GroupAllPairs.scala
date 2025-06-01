@@ -10,9 +10,13 @@ object GroupAllPairs {
 
     val sc = spark.sparkContext
 
-    val numOfRecords = 3000 // The wanted amount of data records
-    val numOfGroups = 30 // The wanted amount of groups
-    val recordLength = 100 // The wanted record size in bytes
+    // val numOfRecords = 3000 // The wanted amount of data records
+    // val numOfGroups = 30 // The wanted amount of groups
+    // val recordLength = 100 // The wanted record size in bytes
+
+    val recordLength = if (args.length > 0) args(0).toInt else 100 // The wanted record size in bytes
+    val numOfRecords = if (args.length > 1) args(1).toInt else 3000 // The wanted amount of data records
+    val numOfGroups =  if (args.length > 2) args(2).toInt else 30 // The wanted amount of groups
 
     //////////////////////////// Create Data /////////////////////////////
 
