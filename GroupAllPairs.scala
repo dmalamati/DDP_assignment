@@ -24,8 +24,7 @@ object GroupAllPairs {
 
     // Create synthetic data record: (i, record_i)
     val syntheticData = (1 to numOfRecords).map { i =>
-      // Create a random string of length=recordLength, which roughly translates to recordLength*1 bytes when using UTF-8 format
-      val record = Random.alphanumeric.take(recordLength).mkString 
+      val record = Random.alphanumeric.take(recordLength).mkString // create a random string of 100 characters as an item record (~200bytes) -> .take(1024 * 1024) for 1MB per record
       (i, record)
     }
 
@@ -59,9 +58,6 @@ object GroupAllPairs {
     val reducedGroupPairs = mappedGroupPairs.mapValues(v => List(v)).reduceByKey(_ ++ _) // Create a list of all records
 
 
-    val endTime = System.nanoTime()
-    val executionTimeMs = (endTime - startTime) / 1e6  // Convert to milliseconds
-
     // Force mappedGroupPairs and reducedGroupPairs RDD execution
     println("\nNumber of pairs after map phase: " + mappedGroupPairs.count())
     println("\nNumber of pairs after reduce phase: " + reducedGroupPairs.count())
@@ -73,6 +69,8 @@ object GroupAllPairs {
     val sizePerPair = 12 + recordLength  // roughly 12 bytes for (gi, gj, i) + record size in bytes
     val totalBytes = numPairs * sizePerPair
     val totalMB = totalBytes / (1024.0 * 1024.0)
+    val endTime = System.nanoTime()
+    val executionTimeMs = (endTime - startTime) / 1e6  // Convert to milliseconds
 
     println("\nReplication Rate: " + replicationRate)
     println("Communication Cost in pairs: " + numPairs)
