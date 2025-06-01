@@ -18,6 +18,8 @@ object GroupAllPairs {
     val numOfRecords = if (args.length > 1) args(1).toInt else 3000 // The wanted amount of data records
     val numOfGroups =  if (args.length > 2) args(2).toInt else 30 // The wanted amount of groups
 
+    println(s"Inputs: record length=$recordLength, number of records=$numOfRecords, number of groups=$numOfGroups")
+
     //////////////////////////// Create Data /////////////////////////////
 
     // Create synthetic data record: (i, record_i)
