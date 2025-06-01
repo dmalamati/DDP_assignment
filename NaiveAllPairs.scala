@@ -23,8 +23,7 @@ object NaiveAllPairs {
 
     // Create synthetic data record: (i, record_i)
     val syntheticData = (1 to numOfRecords).map { i =>
-      // Create a random string of length=recordLength, which roughly translates to recordLength*1 bytes when using UTF-8 format
-      val record = Random.alphanumeric.take(recordLength).mkString
+      val record = Random.alphanumeric.take(recordLength).mkString // create a random string of 100 characters as an item record (~200bytes) -> .take(1024 * 1024) for 1MB per record
       (i, record)
     }
 
@@ -47,10 +46,6 @@ object NaiveAllPairs {
     // Reduce phase: receives ({i, j}, [Ri, Rj]) key-value pairs where i≠j
     val reducedPairs = mappedPairs.mapValues(v => List(v)).reduceByKey(_ ++ _) // Create a list of records
 
-
-    val endTime = System.nanoTime()
-    val executionTimeMs = (endTime - startTime) / 1e6  // Convert to milliseconds
-
     // Force mappedPairs and reducedPairs RDD execution
     println("\nNumber of pairs after map phase: " + mappedPairs.count())
     println("\nNumber of pairs after reduce phase: " + reducedPairs.count())
@@ -62,6 +57,8 @@ object NaiveAllPairs {
     val sizePerPair = 8 + recordLength  // roughly 8 bytes for (i, j) + record size in bytes
     val totalBytes = numPairs * sizePerPair
     val totalMB = totalBytes / (1024.0 * 1024.0)
+    val endTime = System.nanoTime()
+    val executionTimeMs = (endTime - startTime) / 1e6  // Convert to milliseconds
 
     println("\nReplication Rate: " + replicationRate)
     println("Communication Cost in pairs: " + numPairs)
@@ -80,3 +77,4 @@ object NaiveAllPairs {
 
   }
 }
+
