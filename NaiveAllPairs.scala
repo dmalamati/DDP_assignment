@@ -10,9 +10,12 @@ object NaiveAllPairs {
 
     val sc = spark.sparkContext
 
-    val numOfRecords = 3000 // The wanted amount of data records
+    // val numOfRecords = 3000 // The wanted amount of data records
+    // val recordLength = 100 // The wanted record size in bytes
+
+    val recordLength = if (args.length > 0) args(0).toInt else 100 // The wanted record size in bytes
+    val numOfRecords = if (args.length > 1) args(1).toInt else 3000 // The wanted amount of data records
     val numOfGroups = numOfRecords // Naive ≡ Each record as its own group
-    val recordLength = 100 // The wanted record size in bytes
 
     //////////////////////////// Create Data /////////////////////////////
 
@@ -73,5 +76,4 @@ object NaiveAllPairs {
     spark.stop()
 
   }
-
 }
