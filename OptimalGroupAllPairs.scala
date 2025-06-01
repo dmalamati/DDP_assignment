@@ -10,8 +10,11 @@ object OptimalGroupAllPairs {
 
     val sc = spark.sparkContext
 
-    val numOfRecords = 3000 // The wanted amount of data records (d)
-    val recordLength = 100 // The wanted record size in bytes
+    // val numOfRecords = 3000 // The wanted amount of data records (d)
+    // val recordLength = 100 // The wanted record size in bytes
+
+    val recordLength = if (args.length > 0) args(0).toInt else 100 // The wanted record size in bytes
+    val numOfRecords = if (args.length > 1) args(1).toInt else 3000 // The wanted amount of data records (d)
 
     //////////////////////////// Create Data /////////////////////////////
 
@@ -42,14 +45,14 @@ object OptimalGroupAllPairs {
       }
     }
 
-    val maybeP = findOptimalPrime(numOfRecords)
+    val found_p = findOptimalPrime(numOfRecords)
 
-    if (maybeP.isEmpty) {
+    if (found_p.isEmpty) {
       println(s"No valid prime p found such that p^2 divides $numOfRecords.")
       System.exit(1)
     }
 
-    val p = maybeP.get
+    val p = found_p.get
     val q = numOfRecords / p // reducer size
     val r = p + 1            // replication rate
     val g = p * p            // number of reducers
