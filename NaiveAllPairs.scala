@@ -17,6 +17,8 @@ object NaiveAllPairs {
     val numOfRecords = if (args.length > 1) args(1).toInt else 3000 // The wanted amount of data records
     val numOfGroups = numOfRecords // Naive ≡ Each record as its own group
 
+    println(s"Inputs: record length=$recordLength, number of records=$numOfRecords")
+
     //////////////////////////// Create Data /////////////////////////////
 
     // Create synthetic data record: (i, record_i)
