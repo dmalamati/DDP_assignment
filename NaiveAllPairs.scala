@@ -23,7 +23,8 @@ object NaiveAllPairs {
 
     // Create synthetic data record: (i, record_i)
     val syntheticData = (1 to numOfRecords).map { i =>
-      val record = Random.alphanumeric.take(recordLength).mkString // create a random string of 100 characters as an item record (~200bytes) -> .take(1024 * 1024) for 1MB per record
+      // Create a random string of length=recordLength, which roughly translates to recordLength*1 bytes when using UTF-8 format
+      val record = Random.alphanumeric.take(recordLength).mkString
       (i, record)
     }
 
