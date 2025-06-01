@@ -1,0 +1,21 @@
+For NaiveALlPairs:
+spark-submit --class NaiveAllPairs --master local[*] NaiveAllPairs.jar arg1 arg2 
+where:
+arg1: The wanted record size in bytes
+arg2: The wanted amount of data records
+
+
+For GroupALlPairs:
+spark-submit --class GroupAllPairs --master local[*] GroupAllPairs.jar arg1 arg2 arg3
+where:
+arg1: The wanted record size in bytes
+arg2: The wanted amount of data records
+arg3: The wanted amount of groups
+
+
+For OptimalGroupALlPairs:
+spark-submit --class OptimalGroupAllPairs --master local[*] OptimalGroupAllPairs.jar arg1 arg2 
+where:
+arg1: The wanted record size in bytes
+arg2: The wanted amount of data records
+
