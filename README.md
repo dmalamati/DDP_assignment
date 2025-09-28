@@ -47,6 +47,3 @@ To build and run the project you will need:
 - Operating System: Linux, macOS, or Windows Subsystem for Linux (WSL)  
 
 Make sure the environment variable `$SPARK_HOME` is properly set, and add `$SPARK_HOME/bin` to your system `PATH` for easier access to `spark-submit`.
-
-One item per line:
-
